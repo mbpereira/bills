@@ -1,12 +1,13 @@
 import { Application, Request, Response, NextFunction, Router } from "express";
 import Knex from "knex";
-import { DepositService } from "./deposit.service";
+import { createLaunchService } from "./factories";
+import { LaunchService } from "./launch.service";
 
-class DepositController {
+class LaunchController {
     /**
      *
      */
-    constructor() { }
+    constructor(private knex: LaunchService) { }
     
     async load(req: Request, res: Response, next: NextFunction) { }
     async find(req: Request, res: Response, next: NextFunction) { }
@@ -17,7 +18,8 @@ class DepositController {
 
 export const map = (app: Application, knex: Knex) => {
     const route = Router();
-    const controller = new DepositController();
+    const launchService = createLaunchService(knex);
+    const controller = new LaunchController(launchService);
 
         route
             .get('/', controller.load)
@@ -26,6 +28,6 @@ export const map = (app: Application, knex: Knex) => {
             .post('/', controller.create)
             .delete('/:id', controller.destroy)
     
-    app.use('/deposits', route);
+    app.use('/launches', route);
 }
 

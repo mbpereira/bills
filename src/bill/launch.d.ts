@@ -1,13 +1,14 @@
-import { Deposit } from "../deposit/deposit";
+import { FinnancialAccount } from "../finnancial-account/finnancial-account";
 import { LaunchType } from "./launch-type.enum";
 import { LaunchStatus } from "./launch-status.enum";
 
 export interface Launch {
     id: number;
-    deposit: Deposit;
+    deposit?: FinnancialAccount;
+    depositId: number;
     description: string;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
     value: number;
     type: LaunchType;
     status: LaunchStatus

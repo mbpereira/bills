@@ -1,4 +1,4 @@
-import { ILaunchRepository } from "./launch.repository.d";
+import { ILaunchRepository } from "./launch.repository";
 import { Launch } from "./launch";
 import Knex, { QueryBuilder } from "knex";
 
