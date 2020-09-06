@@ -1,9 +1,9 @@
-import { Launch } from "./launch";
+import { Bill } from "./launch";
 
-export interface ILaunchRepository {
-    findById(id: number): Promise<Launch>;
-    all(limit?: number): Promise<Launch>;
-    add(launch: Launch): Promise<void>;
+export interface IBillRepository {
+    findById(id: number): Promise<Bill>;
+    all(limit?: number): Promise<Bill>;
+    add(launch: Bill): Promise<void>;
     remove(id: number);
-    update(id: number, launch: Launch): Promise<void>;
+    update(id: number, launch: Bill): Promise<void>;
 }

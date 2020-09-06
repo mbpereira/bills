@@ -1,35 +1,38 @@
-import { ILaunchRepository } from "./launch.repository";
-import { Launch } from "./launch";
+import { IBillRepository } from "./launch.repository.d";
+import { Bill } from "./launch";
 import Knex, { QueryBuilder } from "knex";
 
-export class LaunchRepository implements ILaunchRepository {
+export class BillRepository implements IBillRepository {
 
-  private queryBuilder: QueryBuilder;
   /**
    *
    */
   
-  constructor(knex: Knex) {
-    this.queryBuilder = knex("Launch");
+  constructor(private knex: Knex) {
   }
 
-  findById(id: number): Promise<import("./launch").Launch> {
+  get queryBuilder() {
+    return this.knex("Bills");
+  }
+
+  async findById(id: number): Promise<Bill> {
+    return await this.queryBuilder.where("id", id)
+      .first();
+  }
+
+  all(limit?: number | undefined): Promise<Bill> {
     throw new Error("Method not implemented.");
   }
 
-  all(limit?: number | undefined): Promise<import("./launch").Launch> {
+  async add(bill: Bill): Promise<void> {
+    return await this.queryBuilder.insert(bill);
+  }
+
+  remove(id: number): Promise<void> {
     throw new Error("Method not implemented.");
   }
 
-  async add(launch: Launch): Promise<void> {
-    this.queryBuilder.insert(launch);
-  }
-
-  remove(id: number) {
-    throw new Error("Method not implemented.");
-  }
-
-  update(id: number, launch: Launch): Promise<void> {
+  update(id: number, launch: Bill): Promise<void> {
     throw new Error("Method not implemented.");
   }
 

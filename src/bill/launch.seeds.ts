@@ -1,9 +1,9 @@
-import { Launch } from "./launch";
-import { LaunchType } from "./launch-type.enum";
-import { LaunchStatus } from "./launch-status.enum";
+import { Bill } from "./launch";
+import { BillType } from "./bill-type.enum";
+import { BillStatus } from "./bill-status.enum";
 
-export const launchFakes: Launch[] = [
-  { id: 1, depositId: 1, description: "Recebimento de Salário", type: LaunchType.Credit, status: LaunchStatus.Closed, value: 1642.00 },
-  { id: 2, depositId: 1, description: "Pagamento Fatura Nubank", type: LaunchType.Debit, status: LaunchStatus.Closed, value: 350.00 },
-  
+export const launchFakes: Bill[] = [
+  { id: 1, description: "Recebimento de Salário", type: BillType.Receivable, status: BillStatus.Closed, totalValue: 1642.00, totalMissing: 0 },
+  { id: 2, description: "Pagamento Fatura Nubank", type: BillType.Payable, status: BillStatus.Closed, totalValue: 350.00, totalMissing: 0 },
+  { id: 3, description: "Pagamento Conta da Claro", type: BillType.Payable, status: BillStatus.Partial, totalValue: 210, totalMissing: 118 }
 ];

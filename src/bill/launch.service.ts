@@ -1,18 +1,14 @@
-import { ILaunchRepository } from "./launch.repository";
-import { Launch } from "./launch";
+import { IBillRepository } from "./launch.repository.d";
+import { Bill } from "./launch";
 import { throwException } from "../error/throw-exception";
 
 export class LaunchService {
   /**
    *
    */
-  constructor(private repository: ILaunchRepository) {}
+  constructor(private repository: IBillRepository) {}
 
-  async save(launch: Launch): Promise<void> {
-    try {
-      this.repository.add(launch);
-    } catch (e) {
-      throwException(e);
-    }
+  pay(billId: number, value: number) {
+
   }
 }
