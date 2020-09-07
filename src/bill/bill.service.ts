@@ -5,7 +5,8 @@ import { ApplicationError } from "../error/application-error";
 import { BillStatus } from "./bill-status.enum";
 import { AbstractFinnancialAccountRepository } from "../finnancial-account/finnancial-account.repository.abstract";
 
-export class LaunchService {
+export class BillService {
+
   /**
    *
    */

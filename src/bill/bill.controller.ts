@@ -1,13 +1,13 @@
 import { Application, Request, Response, NextFunction, Router } from "express";
 import Knex from "knex";
 import { createLaunchService } from "./factories";
-import { LaunchService } from "./bill.service";
+import { BillService } from "./bill.service";
 
-class LaunchController {
+class BillController {
     /**
      *
      */
-    constructor(private knex: LaunchService) { }
+    constructor(private knex: BillService) { }
     
     async load(req: Request, res: Response, next: NextFunction) { }
     async find(req: Request, res: Response, next: NextFunction) { }
@@ -19,7 +19,7 @@ class LaunchController {
 export const map = (app: Application, knex: Knex) => {
     const route = Router();
     const launchService = createLaunchService(knex);
-    const controller = new LaunchController(launchService);
+    const controller = new BillController(launchService);
 
         route
             .get('/', controller.load)
