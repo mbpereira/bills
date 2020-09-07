@@ -1,10 +1,10 @@
 import { BillRepository } from "./launch.repository"
-import { IBillRepository } from "./launch.repository.d";
+import { AbstractBillRepository } from "./launch.repository.d";
 import { LaunchService } from "./launch.service";
 import Knex from "knex";
 import { createFinnancialAccountRepository } from "../finnancial-account/factories";
 
-export const createLaunchRepository = (knex: Knex): IBillRepository => {
+export const createLaunchRepository = (knex: Knex): AbstractBillRepository => {
   return new BillRepository(knex);
 }
 

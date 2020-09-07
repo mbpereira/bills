@@ -1,4 +1,4 @@
-import { IFinnancialAccountRepository } from "./finnancial-account.repository.d";
+import { AbstractFinnancialAccountRepository } from "./finnancial-account.repository.d";
 import { FinnancialAccount } from "./finnancial-account";
 import { ApplicationError } from "../error/application-error";
 
@@ -18,7 +18,7 @@ export class FinnancialAccountService {
   /**
    *
    */
-  constructor(private finnancialRepository: IFinnancialAccountRepository) { }
+  constructor(private finnancialRepository: AbstractFinnancialAccountRepository) { }
   
   async create(deposit: FinnancialAccount) {
     if (!deposit.name)

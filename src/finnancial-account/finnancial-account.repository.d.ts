@@ -1,10 +1,10 @@
 import { FinnancialAccount } from "./finnancial-account";
-import { ITransactional } from "../data/transactional.d";
+import { AbstractTransactional } from "../data/transactional";
 
-export interface IFinnancialAccountRepository extends ITransactional {
-    findById(id: number): Promise<FinnancialAccount>;
-    all(limit?: number): Promise<FinnancialAccount[]>;
-    add(launch: FinnancialAccount): Promise<void>;
-    remove(id: number): Promise<void>;
-    update(id: number, launch: FinnancialAccount): Promise<void>;
+export abstract class AbstractFinnancialAccountRepository extends AbstractTransactional {
+    abstract findById(id: number): Promise<FinnancialAccount>;
+    abstract all(limit?: number): Promise<FinnancialAccount[]>;
+    abstract add(launch: FinnancialAccount): Promise<void>;
+    abstract remove(id: number): Promise<void>;
+    abstract update(id: number, launch: FinnancialAccount): Promise<void>;
 }

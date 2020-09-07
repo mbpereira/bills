@@ -1,9 +1,9 @@
 import Knex from "knex";
 import { FinnancialAccountService } from "./finnancial-account.service";
 import { FinnancialAccountRepository } from "./finnancial-account.repository";
-import { IFinnancialAccountRepository } from "./finnancial-account.repository.d";
+import { AbstractFinnancialAccountRepository } from "./finnancial-account.repository.d";
 
-export function createFinnancialAccountRepository(knex: Knex): IFinnancialAccountRepository {
+export function createFinnancialAccountRepository(knex: Knex): AbstractFinnancialAccountRepository {
   return new FinnancialAccountRepository(knex);
 }
 

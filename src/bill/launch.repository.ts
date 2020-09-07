@@ -1,21 +1,15 @@
-import { IBillRepository } from "./launch.repository.d";
+import { AbstractBillRepository } from "./launch.repository.d";
 import { Bill } from "./launch";
 import Knex from "knex";
 
-export class BillRepository implements IBillRepository {
-
-  private transaction?: Knex.Transaction<any, any>;
+export class BillRepository extends AbstractBillRepository {
 
   /**
    *
    */
   
-  constructor(private knex: Knex) {
-    this.transaction = undefined;
-  }
-
-  setTransaction(trx: Knex.Transaction<any, any>) {
-    this.transaction = trx;
+  constructor(protected knex: Knex) {
+    super();
   }
 
   get queryBuilder() {

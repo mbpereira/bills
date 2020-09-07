@@ -1,20 +1,14 @@
-import { IFinnancialAccountRepository } from "./finnancial-account.repository.d"
+import { AbstractFinnancialAccountRepository } from "./finnancial-account.repository.d"
 import { FinnancialAccount } from "./finnancial-account";
-import Knex, { QueryBuilder } from "knex";
-import { ITransactional } from "../data/transactional";
+import Knex from "knex";
 
-export class FinnancialAccountRepository implements IFinnancialAccountRepository, ITransactional {
-  private transaction?: Knex.Transaction<any, any>;
+export class FinnancialAccountRepository extends AbstractFinnancialAccountRepository, ITransactional {
 
   /**
    *
    */
-  constructor(private knex: Knex) {
-    this.transaction = undefined;
-  }
-
-  setTransaction(trx: Knex.Transaction<any, any>) {
-    this.transaction = trx;
+  constructor(protected knex: Knex) {
+    super();
   }
 
   get queryBuilder() {
