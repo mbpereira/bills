@@ -24,7 +24,7 @@ export class BillRepository extends AbstractBillRepository {
       .first();
   }
 
-  all(limit?: number | undefined): Promise<Bill> {
+  all(limit?: number | undefined): Promise<Bill[]> {
     throw new Error("Method not implemented.");
   }
 

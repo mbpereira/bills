@@ -11,4 +11,4 @@ export interface Bill {
     totalMissing: number;
     type: BillType;
     status: BillStatus;
-};
+}

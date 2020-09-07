@@ -4,19 +4,15 @@ import Knex from "knex";
 
 export class FinnancialAccountRepository extends AbstractFinnancialAccountRepository {
 
-  constructor(knex: Knex) {
+  constructor(protected knex: Knex) {
     super();
-    this.knex = knex;
   }
 
-  knex: Knex;
-
   get queryBuilder() {
-    return this.knex("FinnancialAccounts");
-    // if(!this.transaction)
-    //   return this.knex("FinnancialAccounts");
+    if(!this.transaction)
+      return this.knex("FinnancialAccounts");
   
-    // return this.transaction("FinnancialAccounts");
+    return this.transaction("FinnancialAccounts");
   }
 
   async findById(id: number): Promise<FinnancialAccount> {

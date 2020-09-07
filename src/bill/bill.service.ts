@@ -62,6 +62,7 @@ export class BillService {
   async find(billId: number) {
     if (!billId)
       throw new ApplicationError("INVALID_OPERATION", "É necessário informar um código válido", 50);
+    
     const record = await this.billRepository.findById(billId);
 
     if (!record)
