@@ -1,5 +1,5 @@
-import { AbstractBillRepository } from "./launch.repository.abstract";
-import { Bill } from "./launch";
+import { AbstractBillRepository } from "./bill.repository.abstract";
+import { Bill } from "./bill";
 import { throwException } from "../error/throw-exception";
 import { ApplicationError } from "../error/application-error";
 import { BillStatus } from "./bill-status.enum";

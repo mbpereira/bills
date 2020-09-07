@@ -1,4 +1,4 @@
-import { Bill } from "./launch";
+import { Bill } from "./bill";
 import { BillType } from "./bill-type.enum";
 import { BillStatus } from "./bill-status.enum";
 

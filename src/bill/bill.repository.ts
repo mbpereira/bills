@@ -1,5 +1,5 @@
-import { AbstractBillRepository } from "./launch.repository.abstract";
-import { Bill } from "./launch";
+import { AbstractBillRepository } from "./bill.repository.abstract";
+import { Bill } from "./bill";
 import Knex from "knex";
 
 export class BillRepository extends AbstractBillRepository {

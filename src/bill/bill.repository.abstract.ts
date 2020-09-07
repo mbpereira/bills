@@ -1,4 +1,4 @@
-import { Bill } from "./launch";
+import { Bill } from "./bill";
 import { AbstractTransactional } from "../data/transactional";
 
 export abstract class AbstractBillRepository extends AbstractTransactional {

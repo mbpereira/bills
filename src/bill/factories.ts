@@ -1,6 +1,6 @@
-import { BillRepository } from "./launch.repository"
-import { AbstractBillRepository } from "./launch.repository.abstract";
-import { LaunchService } from "./launch.service";
+import { BillRepository } from "./bill.repository"
+import { AbstractBillRepository } from "./bill.repository.abstract";
+import { LaunchService } from "./bill.service";
 import Knex from "knex";
 import { createFinnancialAccountRepository } from "../finnancial-account/factories";
 

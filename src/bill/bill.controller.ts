@@ -1,7 +1,7 @@
 import { Application, Request, Response, NextFunction, Router } from "express";
 import Knex from "knex";
 import { createLaunchService } from "./factories";
-import { LaunchService } from "./launch.service";
+import { LaunchService } from "./bill.service";
 
 class LaunchController {
     /**
