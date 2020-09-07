@@ -1,6 +1,7 @@
 import { FinnancialAccount } from "./finnancial-account";
+import { ITransactional } from "../data/transactional.d";
 
-export interface IFinnancialAccountRepository {
+export interface IFinnancialAccountRepository extends ITransactional {
     findById(id: number): Promise<FinnancialAccount>;
     all(limit?: number): Promise<FinnancialAccount[]>;
     add(launch: FinnancialAccount): Promise<void>;

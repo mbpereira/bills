@@ -1,18 +1,27 @@
 import { IFinnancialAccountRepository } from "./finnancial-account.repository.d"
 import { FinnancialAccount } from "./finnancial-account";
 import Knex, { QueryBuilder } from "knex";
+import { ITransactional } from "../data/transactional";
 
-export class FinnancialAccountRepository implements IFinnancialAccountRepository {
-
+export class FinnancialAccountRepository implements IFinnancialAccountRepository, ITransactional {
+  private transaction?: Knex.Transaction<any, any>;
 
   /**
    *
    */
   constructor(private knex: Knex) {
+    this.transaction = undefined;
+  }
+
+  setTransaction(trx: Knex.Transaction<any, any>) {
+    this.transaction = trx;
   }
 
   get queryBuilder() {
-    return this.knex("FinnancialAccounts");
+    if(!this.transaction)
+      return this.knex("FinnancialAccounts");
+  
+    return this.transaction("FinnancialAccounts");
   }
 
   async findById(id: number): Promise<FinnancialAccount> {

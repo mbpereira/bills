@@ -1,4 +1,6 @@
 import knex from "knex";
+import { ITransactional } from "./transactional";
+import Knex from "knex";
 
 export const createKnex = () => {
   return knex({
@@ -25,3 +27,14 @@ export const createKnexTest = () => {
     }
   });
 };
+
+export const createTransactionContext = async (transactionals: ITransactional[], unitOfWork: { (trx: Knex.Transaction<any, any>): void }) => {
+  
+  let trx: Knex.Transaction<any, any> = await createKnex().transaction();
+  
+  transactionals.map(transactional => {
+    transactional.setTransaction(trx);
+  });
+
+  unitOfWork(trx);
+}
