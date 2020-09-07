@@ -23,6 +23,10 @@ export abstract class AbstractTransactional {
   }
 
   get transaction(): Transaction<any, any> | null {
+    if (this._transaction?.isCompleted) {
+      return null;
+    }
+
     return this._transaction;
   }
 }

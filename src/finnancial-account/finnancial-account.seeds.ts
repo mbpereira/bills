@@ -1,6 +1,6 @@
 import { FinnancialAccount } from "./finnancial-account";
 
-export const depositFakes: FinnancialAccount[] = [
+export const finnancialAccountsFakes: FinnancialAccount[] = [
   { id: 1, name: "BRADESCO", balance: 800 },
   { id: 2, name: "NEXT", balance: 800 },
   { id: 3, name: "NUBANK ", balance: 0 },

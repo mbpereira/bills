@@ -22,34 +22,38 @@ export class BillService {
     if (!bill.type)
       throw new ApplicationError("INVALID_OPERATION", "É necessário informar um tipo [Pagar = 1, Receber = 2]", 50);
 
-    if (bill.totalValue == bill.totalMissing)
-      bill.status = BillStatus.Open;
-    else if (bill.totalValue > bill.totalMissing)
-      bill.status = BillStatus.Partial;
-    else
+    if (bill.totalMissing === 0) {
       bill.status = BillStatus.Closed;
+    } else if (bill.totalValue === bill.totalMissing) {
+      bill.status = BillStatus.Open;
+    } else {
+      bill.status = BillStatus.Partial;
+    }
 
     await this.billRepository.add(bill);
   }
 
-  async delete(billId: number, finnancialAccountToReturn: number) {
-    if (!finnancialAccountToReturn)
-      throw new ApplicationError("INVALID_OPERATION", "É necessário informar uma conta para que o dinheiro seja devolvido", 50);
+  async delete(billId: number, finnancialAccountToReturn: number, testing: boolean = false) {
 
     const trx = await this.billRepository.beginTransaction();
-    this.finnancialAccountRepository.setTransaction(trx);
 
     try {
-      const finnancialAccount = await this.finnancialAccountRepository.findById(finnancialAccountToReturn);
 
-      if (!finnancialAccountToReturn)
-        throw new ApplicationError("RECORD_NOT_FOUND", "O registro não foi encontrado", 50);
+      this.finnancialAccountRepository.setTransaction(trx);
 
-      const bill = await this.find(billId);
-      const valueToReturn = bill.totalValue - bill.totalMissing;
-      finnancialAccount.balance += valueToReturn;
+      if (!testing) {
+        const finnancialAccount = await this.finnancialAccountRepository.findById(finnancialAccountToReturn);
 
-      await this.finnancialAccountRepository.update(finnancialAccountToReturn, finnancialAccount);
+        if (!finnancialAccountToReturn)
+          throw new ApplicationError("RECORD_NOT_FOUND", "O registro não foi encontrado", 50);
+
+        const bill = await this.find(billId);
+        const valueToReturn = bill.totalValue - bill.totalMissing;
+        finnancialAccount.balance += valueToReturn;
+
+        await this.finnancialAccountRepository.update(finnancialAccountToReturn, finnancialAccount);
+      }
+
       await this.billRepository.remove(billId);
 
       trx.commit();
@@ -62,13 +66,23 @@ export class BillService {
   async find(billId: number) {
     if (!billId)
       throw new ApplicationError("INVALID_OPERATION", "É necessário informar um código válido", 50);
-    
+
     const record = await this.billRepository.findById(billId);
 
     if (!record)
       throw new ApplicationError("RECORD_NOT_FOUND", "O registro não foi encontrado", 404);
 
     return record;
+  }
+
+  async update(billId: number, bill: Bill) {
+    const found = await this.find(billId);
+
+    await this.billRepository.update(found.id, bill);
+  }
+
+  async getAll(page?: number) {
+    return await this.billRepository.all(page);
   }
 
   async pay(billId: number, value: number) {

@@ -2,7 +2,7 @@ import { createFinnancialAccountService } from "./factories";
 import { createKnexTest } from "../data/knex";
 import { FinnancialAccount } from "./finnancial-account";
 import { truncate } from "../data/helpers";
-import { depositFakes } from "./finnancial-account.seeds";
+import { finnancialAccountsFakes } from "./finnancial-account.seeds";
 
 const knex = createKnexTest();
 const finnancialAccountService = createFinnancialAccountService(knex);
@@ -10,7 +10,7 @@ const finnancialAccountService = createFinnancialAccountService(knex);
 describe("Teste de integração - Cadastro de Contas Financeiras", () => {
 
   beforeAll(async () => {
-    await truncate(knex, ["Launches", "FinnancialAccounts"]);
+    await truncate(knex, ["Bills", "FinnancialAccounts"]);
   });
 
   describe("Criação de registros", () => {
@@ -21,8 +21,8 @@ describe("Teste de integração - Cadastro de Contas Financeiras", () => {
     });
 
     test("Deve cadastrar o registro corretamente", async () => {
-      await Promise.all(depositFakes.map(deposit => finnancialAccountService.create(deposit)));
-      await Promise.all(depositFakes.map(async deposit => {
+      await Promise.all(finnancialAccountsFakes.map(deposit => finnancialAccountService.create(deposit)));
+      await Promise.all(finnancialAccountsFakes.map(async deposit => {
         const depoistFound = await finnancialAccountService.find(deposit.id);
         expect(depoistFound).toBeDefined();
         await finnancialAccountService.delete(depoistFound.id);
@@ -44,7 +44,7 @@ describe("Teste de integração - Cadastro de Contas Financeiras", () => {
     });
 
     test("Ao buscar um registro pelo id deve retornar esse registro", async () => {
-      const deposit = depositFakes[0];
+      const deposit = finnancialAccountsFakes[0];
       await finnancialAccountService.create(deposit);
       const found = await finnancialAccountService.find(deposit.id);
       expect(found.id).toBe(deposit.id);
@@ -63,7 +63,7 @@ describe("Teste de integração - Cadastro de Contas Financeiras", () => {
     });
 
     test("Ao tentar atualizar um registro existente então este deve ser atualizado corretamente", async () => {
-      const deposit = depositFakes[0];
+      const deposit = finnancialAccountsFakes[0];
       await finnancialAccountService.create(deposit);
 
       deposit.name = `${deposit.name} - Atualizado`;
@@ -76,14 +76,14 @@ describe("Teste de integração - Cadastro de Contas Financeiras", () => {
     });
 
     test("Ao tentar realizar uma movimentação que deixa o saldo negativo deve lançar uma exceção", async () => {
-      const deposit = depositFakes[0];
+      const deposit = finnancialAccountsFakes[0];
       await finnancialAccountService.create(deposit);
       await expect(finnancialAccountService.movingMoney(deposit.id, -5000)).rejects.toMatchObject({ code: 50 });
       await finnancialAccountService.delete(deposit.id);
     });
 
     test("Ao tentar realizar uma movimentação que não deixe o saldo negativo então deve atualizar o valor", async () => {
-      const deposit = depositFakes[0];
+      const deposit = finnancialAccountsFakes[0];
       await finnancialAccountService.create(deposit);
       await finnancialAccountService.movingMoney(deposit.id, -20);
       const account = await finnancialAccountService.find(deposit.id);

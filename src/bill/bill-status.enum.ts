@@ -1,5 +1,5 @@
 export enum BillStatus {
   Open = 1,
-  Partial,
-  Closed,
+  Partial = 2,
+  Closed = 3,
 }

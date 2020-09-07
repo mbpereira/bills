@@ -1,6 +1,6 @@
 import { AbstractBillRepository } from "./bill.repository.abstract";
 import { Bill } from "./bill";
-import { billFakes } from "./bill.seeds";
+import { billFakes1 } from "./bill.seeds";
 
 export class BillRepositoryFake extends AbstractBillRepository {
 
@@ -10,11 +10,16 @@ export class BillRepositoryFake extends AbstractBillRepository {
    */
   constructor() {
     super();
-    this.data = [...billFakes];
+    this.data = [...billFakes1];
   }
   
   findById(id: number): Promise<Bill> {
-    return Promise.resolve(this.data.find(b => b.id === id));
+    const result = this.data.find(b => b.id === id);
+
+    if (!result)
+      throw "Not Found";
+
+    return Promise.resolve(result);
   }
 
   all(limit?: number): Promise<Bill[]> {

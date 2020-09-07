@@ -10,3 +10,6 @@ alter table "Bills" add column "closedAt" timestamp null
 alter table "Bills" add column "totalMissing" double precision not null
 alter table "Bills" rename column "value" to "totalValue"
 alter table "Bills" alter column "totalValue" TYPE double precision
+
+ALTER TABLE public."Bills"
+    ALTER COLUMN "createdAt" SET DEFAULT now();
