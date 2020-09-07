@@ -7,3 +7,12 @@ export const truncate = async (knex: Knex, table: string[] | string) => {
   }
   await knex.raw(`truncate table "${table}" cascade`);
 };
+
+export const transactionMock = () => {
+  return {
+    transaction: (args: any) => ({
+      commit: (args: any) => { },
+      rollback: (args: any) => { }
+    })
+  } as any;
+}

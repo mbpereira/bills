@@ -46,12 +46,11 @@ describe("Teste de integração - Cadastro de Contas à pagar/receber", () => {
   });
 });
 
-
 const billRepositoryFake = new BillRepositoryFake();
 const finnancialRepositoryFake = new FinancialAccountRepositoryFake();
 const billServiceWithFakeRepo = creteBillServiceWithRepositories(billRepositoryFake, finnancialRepositoryFake);
 
-describe("Teste de regras para inclusão de pagamentos", () => {
+describe("Teste do serviço de pagamentos", () => {
   describe("Criação de um novo pagamento", () => {
     test("Quando o valor pendente do pagamento for maior que o valor do pagamento então deve ser lançada uma exceção", async () => {
       const billFake = { id: 7, totalValue: 100, totalMissing: 200 } as Bill;      
@@ -119,6 +118,63 @@ describe("Teste de regras para inclusão de pagamentos", () => {
 
       expect(created.status).toBe(BillStatus.Closed);
     });
+  });
 
+  describe("Atualização de pagamentos", () => {
+
+    beforeAll(async () => {
+      const bills: Bill[] = [
+        { id: 21, description: "Conta de Luz", totalValue: 350, totalMissing: 350, type: BillType.Payable } as Bill,
+        { id: 22, description: "Conta de água", totalValue: 80, totalMissing: 43, type: BillType.Payable } as Bill,
+        { id: 23, description: "Gastos com gasolina", totalValue: 340, totalMissing: 0, type: BillType.Payable } as Bill,
+        { id: 24, description: "Gastos com lazer", totalValue: 600, totalMissing: 600, type: BillType.Payable } as Bill
+      ];
+
+      await Promise.all(bills.map(bill => billServiceWithFakeRepo.create(bill)));
+    });
+
+    test("Ao tentar incluir um pagamento com valor igual ou menor que zero, deve ser lançada uma exceção", async () => {
+      await expect(billServiceWithFakeRepo.pay(21, 0)).rejects.toMatchObject({ code: 50, name: "INVALID_OPERATION" });
+      await expect(billServiceWithFakeRepo.pay(22, -22)).rejects.toMatchObject({ code: 50, name: "INVALID_OPERATION" });
+    });
+
+    test("Ao tentar incluir um pagamento com valor maior do que o valor pendente, deve ser lançada uma exceção", async () => {
+      await expect(billServiceWithFakeRepo.pay(22, 44)).rejects.toMatchObject({ code: 50, name: "INVALID_OPERATION" });
+    });
+
+    test("Ao tentar incluir um pagamento para uma conta que já está fechada, deve ser lançada uma exceção", async () => {
+      await expect(billServiceWithFakeRepo.pay(23, 5)).rejects.toMatchObject({ code: 50, name: "INVALID_OPERATION" });
+    });
+
+    test("Ao incluir um pagamento parcial, a conta deve ter o estado alterado para 'parcial'", async () => {
+      await billServiceWithFakeRepo.pay(21, 300);
+      const billWithPartialPayment = await billServiceWithFakeRepo.find(21);
+
+      expect(billWithPartialPayment.status).toBe(BillStatus.Partial);
+      expect(billWithPartialPayment.totalMissing).toBe(50);
+    });
+
+    test("Ao incluir um pagamento total para uma conta, essa conta deve ter seu status alterado para 'fechado'", async () => {
+      await billServiceWithFakeRepo.pay(24, 600);
+      const billWithPartialPayment = await billServiceWithFakeRepo.find(24);
+
+      expect(billWithPartialPayment.status).toBe(BillStatus.Closed);
+      expect(billWithPartialPayment.totalMissing).toBe(0);
+    });
+  });
+
+  describe("Remoção de pagamentos", () => {
+    test("Ao tentar remover um pagamento e definir a conta financeira para estorno, então o saldo dessa conta financeira deve aumentar", async () => {
+      const finnancialAccount = await finnancialRepositoryFake.findById(1);
+      const billToDelete = await billServiceWithFakeRepo.find(24);
+
+      const newBalance = finnancialAccount.balance + (billToDelete.totalValue - billToDelete.totalMissing);
+
+      await billServiceWithFakeRepo.delete(billToDelete.id, finnancialAccount.id);
+
+      const finnancialAccountUpdated = await finnancialRepositoryFake.findById(1);
+
+      expect(finnancialAccountUpdated.balance).toBe(newBalance);
+    });
   });
 });

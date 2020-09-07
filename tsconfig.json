@@ -67,6 +67,6 @@
     "forceConsistentCasingInFileNames": true,
       /* Disallow inconsistently-cased references to the same file. */
   },
-  "include": ["src/**/*.ts", "src/finnancial-account/finnancial-account.repository.abstract.s"],
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "src/**.(spec|test).ts"]
 }

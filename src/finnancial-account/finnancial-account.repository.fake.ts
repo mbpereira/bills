@@ -1,6 +1,7 @@
 import { AbstractFinnancialAccountRepository } from "./finnancial-account.repository.abstract";
 import { FinnancialAccount } from "./finnancial-account";
 import { finnancialAccountsFakes } from "./finnancial-account.seeds";
+import { transactionMock } from "../data/helpers";
 
 export class FinancialAccountRepositoryFake extends AbstractFinnancialAccountRepository {
   
@@ -40,9 +41,9 @@ export class FinancialAccountRepositoryFake extends AbstractFinnancialAccountRep
     this.data[index] = launch;
     return Promise.resolve();
   }
-  
+
   protected get knex(): import("knex") <any, unknown[]> {
-    throw new Error("Method not implemented.");
+    return transactionMock();
   }
 
 }

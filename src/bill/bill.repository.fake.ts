@@ -1,6 +1,7 @@
 import { AbstractBillRepository } from "./bill.repository.abstract";
 import { Bill } from "./bill";
 import { billFakes1 } from "./bill.seeds";
+import { transactionMock } from "../data/helpers";
 
 export class BillRepositoryFake extends AbstractBillRepository {
 
@@ -43,7 +44,6 @@ export class BillRepositoryFake extends AbstractBillRepository {
   }
 
   protected get knex(): import("knex") <any, unknown[]> {
-    throw new Error("Method not implemented.");
+    return transactionMock();
   }
-
 }

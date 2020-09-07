@@ -36,10 +36,10 @@ export class BillService {
   async delete(billId: number, finnancialAccountToReturn: number, testing: boolean = false) {
 
     const trx = await this.billRepository.beginTransaction();
+    this.finnancialAccountRepository.setTransaction(trx);
 
     try {
 
-      this.finnancialAccountRepository.setTransaction(trx);
 
       if (!testing) {
         const finnancialAccount = await this.finnancialAccountRepository.findById(finnancialAccountToReturn);
