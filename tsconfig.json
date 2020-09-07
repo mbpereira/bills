@@ -64,8 +64,9 @@
 
     /* Advanced Options */
     "skipLibCheck": true,                     /* Skip type checking of declaration files. */
-    "forceConsistentCasingInFileNames": true  /* Disallow inconsistently-cased references to the same file. */
+    "forceConsistentCasingInFileNames": true,
+      /* Disallow inconsistently-cased references to the same file. */
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "**/*.(spec|test).ts"]
+  "include": ["src/**/*.ts", "src/finnancial-account/finnancial-account.repository.abstract.s"],
+  "exclude": ["node_modules", "src/**.(spec|test).ts"]
 }

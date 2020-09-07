@@ -2,13 +2,10 @@ import Knex, { Transaction } from "knex";
 
 export abstract class AbstractTransactional {
 
-  private _transaction?: Transaction<any, any>
+  private _transaction: Transaction<any, any> | null = null;
   /**
    *
    */
-  constructor() {
-    this._transaction = undefined;
-  }
 
   protected abstract get knex(): Knex;
 
@@ -25,7 +22,7 @@ export abstract class AbstractTransactional {
     return this._transaction;
   }
 
-  get transaction(): Transaction<any, any> | undefined {
+  get transaction(): Transaction<any, any> | null {
     return this._transaction;
   }
 }

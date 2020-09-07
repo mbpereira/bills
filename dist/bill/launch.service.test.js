@@ -36,34 +36,25 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LaunchRepository = void 0;
-var LaunchRepository = /** @class */ (function () {
-    /**
-     *
-     */
-    function LaunchRepository(knex) {
-        this.queryBuilder = knex("Launch");
-    }
-    LaunchRepository.prototype.findById = function (id) {
-        throw new Error("Method not implemented.");
-    };
-    LaunchRepository.prototype.all = function (limit) {
-        throw new Error("Method not implemented.");
-    };
-    LaunchRepository.prototype.add = function (launch) {
-        return __awaiter(this, void 0, void 0, function () {
+var knex_1 = require("../data/knex");
+var helpers_1 = require("../data/helpers");
+var knex = knex_1.createKnexTest();
+describe("Teste de integração - Cadastro de Lançamentos (Contas)", function () {
+    beforeAll(function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, helpers_1.truncate(knex, ["Launches", "FinnancialAccounts"])];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    describe("Criação de registros", function () {
+        test("Deve lançar uma exceção caso o nome não seja preenchido", function () { return __awaiter(void 0, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                this.queryBuilder.insert(launch);
                 return [2 /*return*/];
             });
-        });
-    };
-    LaunchRepository.prototype.remove = function (id) {
-        throw new Error("Method not implemented.");
-    };
-    LaunchRepository.prototype.update = function (id, launch) {
-        throw new Error("Method not implemented.");
-    };
-    return LaunchRepository;
-}());
-exports.LaunchRepository = LaunchRepository;
+        }); });
+    });
+});

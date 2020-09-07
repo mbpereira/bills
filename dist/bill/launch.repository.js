@@ -1,4 +1,17 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -36,28 +49,57 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LaunchService = void 0;
-var throw_exception_1 = require("../error/throw-exception");
-var LaunchService = /** @class */ (function () {
+exports.BillRepository = void 0;
+var launch_repository_d_1 = require("./launch.repository.d");
+var BillRepository = /** @class */ (function (_super) {
+    __extends(BillRepository, _super);
     /**
      *
      */
-    function LaunchService(repository) {
-        this.repository = repository;
+    function BillRepository(knex) {
+        var _this = _super.call(this) || this;
+        _this.knex = knex;
+        return _this;
     }
-    LaunchService.prototype.save = function (launch) {
+    Object.defineProperty(BillRepository.prototype, "queryBuilder", {
+        get: function () {
+            if (!this.transaction)
+                return this.knex("Bills");
+            return this.transaction("Bills");
+        },
+        enumerable: false,
+        configurable: true
+    });
+    BillRepository.prototype.findById = function (id) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                try {
-                    this.repository.add(launch);
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.queryBuilder.where("id", id)
+                            .first()];
+                    case 1: return [2 /*return*/, _a.sent()];
                 }
-                catch (e) {
-                    throw_exception_1.throwException(e);
-                }
-                return [2 /*return*/];
             });
         });
     };
-    return LaunchService;
-}());
-exports.LaunchService = LaunchService;
+    BillRepository.prototype.all = function (limit) {
+        throw new Error("Method not implemented.");
+    };
+    BillRepository.prototype.add = function (bill) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.queryBuilder.insert(bill)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    BillRepository.prototype.remove = function (id) {
+        throw new Error("Method not implemented.");
+    };
+    BillRepository.prototype.update = function (id, launch) {
+        throw new Error("Method not implemented.");
+    };
+    return BillRepository;
+}(launch_repository_d_1.AbstractBillRepository));
+exports.BillRepository = BillRepository;

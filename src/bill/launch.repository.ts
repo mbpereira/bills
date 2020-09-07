@@ -1,4 +1,4 @@
-import { AbstractBillRepository } from "./launch.repository.d";
+import { AbstractBillRepository } from "./launch.repository.abstract";
 import { Bill } from "./launch";
 import Knex from "knex";
 

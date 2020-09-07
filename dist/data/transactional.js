@@ -36,52 +36,38 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.map = void 0;
-var express_1 = require("express");
-var factories_1 = require("./factories");
-var LaunchController = /** @class */ (function () {
-    /**
-     *
-     */
-    function LaunchController(knex) {
-        this.knex = knex;
+exports.AbstractTransactional = void 0;
+var AbstractTransactional = /** @class */ (function () {
+    function AbstractTransactional() {
+        this._transaction = null;
     }
-    LaunchController.prototype.load = function (req, res, next) {
-        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
-            return [2 /*return*/];
-        }); });
+    AbstractTransactional.prototype.setTransaction = function (trx) {
+        this._transaction = trx;
     };
-    LaunchController.prototype.find = function (req, res, next) {
-        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
-            return [2 /*return*/];
-        }); });
+    AbstractTransactional.prototype.beginTransaction = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var trx;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!!this._transaction) return [3 /*break*/, 2];
+                        return [4 /*yield*/, this.knex.transaction()];
+                    case 1:
+                        trx = _a.sent();
+                        this._transaction = trx;
+                        _a.label = 2;
+                    case 2: return [2 /*return*/, this._transaction];
+                }
+            });
+        });
     };
-    LaunchController.prototype.update = function (req, res, next) {
-        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
-            return [2 /*return*/];
-        }); });
-    };
-    LaunchController.prototype.create = function (req, res, next) {
-        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
-            return [2 /*return*/];
-        }); });
-    };
-    LaunchController.prototype.destroy = function (req, res, next) {
-        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
-            return [2 /*return*/];
-        }); });
-    };
-    return LaunchController;
+    Object.defineProperty(AbstractTransactional.prototype, "transaction", {
+        get: function () {
+            return this._transaction;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    return AbstractTransactional;
 }());
-exports.map = function (app, knex) {
-    var route = express_1.Router();
-    var launchService = factories_1.getLaunchService(knex);
-    var controller = new LaunchController(launchService);
-    route
-        .get('/', controller.load)
-        .get('/:id', controller.find)
-        .put('/:id', controller.update)
-        .post('/', controller.create)
-        .delete('/:id', controller.destroy);
-    app.use('/launches', route);
-};
+exports.AbstractTransactional = AbstractTransactional;

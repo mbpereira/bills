@@ -1,21 +1,22 @@
-import { AbstractFinnancialAccountRepository } from "./finnancial-account.repository.d"
+import { AbstractFinnancialAccountRepository } from "./finnancial-account.repository.abstract";
 import { FinnancialAccount } from "./finnancial-account";
 import Knex from "knex";
 
-export class FinnancialAccountRepository extends AbstractFinnancialAccountRepository, ITransactional {
+export class FinnancialAccountRepository extends AbstractFinnancialAccountRepository {
 
-  /**
-   *
-   */
-  constructor(protected knex: Knex) {
+  constructor(knex: Knex) {
     super();
+    this.knex = knex;
   }
 
+  knex: Knex;
+
   get queryBuilder() {
-    if(!this.transaction)
-      return this.knex("FinnancialAccounts");
+    return this.knex("FinnancialAccounts");
+    // if(!this.transaction)
+    //   return this.knex("FinnancialAccounts");
   
-    return this.transaction("FinnancialAccounts");
+    // return this.transaction("FinnancialAccounts");
   }
 
   async findById(id: number): Promise<FinnancialAccount> {

@@ -36,24 +36,20 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var factories_1 = require("./factories");
-var knex_1 = require("../knex");
-var application_error_1 = require("../error/application-error");
-var depositService = factories_1.createDepositService(knex_1.createKnexTest());
-describe("Serviço de persistência de contas (depósitos)", function () {
-    describe("Criação de registros", function () {
-        test("Deve lançar uma exceção caso o nome não seja preenchido", function () { return __awaiter(void 0, void 0, void 0, function () {
-            var deposit;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        deposit = { id: 1, name: "" };
-                        return [4 /*yield*/, expect(function () { return depositService.create(deposit); }).rejects.toMatchObject(application_error_1.ApplicationError)];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        }); });
+exports.truncate = void 0;
+exports.truncate = function (knex, table) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                if (!Array.isArray(table)) return [3 /*break*/, 2];
+                return [4 /*yield*/, Promise.all(table.map(function (name) { return knex.raw("truncate table \"" + name + "\" cascade"); }))];
+            case 1:
+                _a.sent();
+                return [2 /*return*/];
+            case 2: return [4 /*yield*/, knex.raw("truncate table \"" + table + "\" cascade")];
+            case 3:
+                _a.sent();
+                return [2 /*return*/];
+        }
     });
-});
+}); };

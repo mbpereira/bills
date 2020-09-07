@@ -1,9 +1,9 @@
-import { AbstractBillRepository } from "./launch.repository.d";
+import { AbstractBillRepository } from "./launch.repository.abstract";
 import { Bill } from "./launch";
 import { throwException } from "../error/throw-exception";
 import { ApplicationError } from "../error/application-error";
 import { BillStatus } from "./bill-status.enum";
-import { AbstractFinnancialAccountRepository } from "../finnancial-account/finnancial-account.repository.d";
+import { AbstractFinnancialAccountRepository } from "../finnancial-account/finnancial-account.repository.abstract";
 
 export class LaunchService {
   /**

@@ -36,24 +36,52 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DepositService = void 0;
-var application_error_1 = require("../error/application-error");
-var DepositService = /** @class */ (function () {
+exports.map = void 0;
+var express_1 = require("express");
+var factories_1 = require("./factories");
+var LaunchController = /** @class */ (function () {
     /**
      *
      */
-    function DepositService(depositRepository) {
-        this.depositRepository = depositRepository;
+    function LaunchController(knex) {
+        this.knex = knex;
     }
-    DepositService.prototype.create = function (deposit) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                if (!deposit.name)
-                    throw new application_error_1.ApplicationError("INVALID_OPERATION", "O nome precisa ser preenchido", 50);
-                return [2 /*return*/, this.depositRepository.add(deposit)];
-            });
-        });
+    LaunchController.prototype.load = function (req, res, next) {
+        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
+            return [2 /*return*/];
+        }); });
     };
-    return DepositService;
+    LaunchController.prototype.find = function (req, res, next) {
+        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
+            return [2 /*return*/];
+        }); });
+    };
+    LaunchController.prototype.update = function (req, res, next) {
+        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
+            return [2 /*return*/];
+        }); });
+    };
+    LaunchController.prototype.create = function (req, res, next) {
+        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
+            return [2 /*return*/];
+        }); });
+    };
+    LaunchController.prototype.destroy = function (req, res, next) {
+        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
+            return [2 /*return*/];
+        }); });
+    };
+    return LaunchController;
 }());
-exports.DepositService = DepositService;
+exports.map = function (app, knex) {
+    var route = express_1.Router();
+    var launchService = factories_1.createLaunchService(knex);
+    var controller = new LaunchController(launchService);
+    route
+        .get('/', controller.load)
+        .get('/:id', controller.find)
+        .put('/:id', controller.update)
+        .post('/', controller.create)
+        .delete('/:id', controller.destroy);
+    app.use('/launches', route);
+};

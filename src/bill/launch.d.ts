@@ -1,4 +1,3 @@
-import { FinnancialAccount } from "../finnancial-account/finnancial-account";
 import { BillType } from "./bill-type.enum";
 import { BillStatus } from "./bill-status.enum";
 
