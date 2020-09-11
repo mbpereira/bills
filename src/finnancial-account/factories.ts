@@ -1,12 +1,13 @@
 import Knex from "knex";
 import { FinnancialAccountService } from "./finnancial-account.service";
 import { FinnancialAccountRepository } from "./finnancial-account.repository";
-// import { AbstractFinnancialAccountRepository } from "./finnancial-account.repository.d";
+import { AbstractFinnancialAccountRepository } from "./finnancial-account.repository.abstract";
 
-export function createFinnancialAccountRepository(knex: Knex) {
-  return new FinnancialAccountRepository(knex);
-}
+export const createFinnancialAccountRepository = (knex: Knex): AbstractFinnancialAccountRepository =>
+  new FinnancialAccountRepository(knex);
 
-export function createFinnancialAccountService(knex: Knex): FinnancialAccountService {
-  return new FinnancialAccountService(createFinnancialAccountRepository(knex));
-}
+export const createFinnancialAccountService = (knex: Knex): FinnancialAccountService =>
+  new FinnancialAccountService(createFinnancialAccountRepository(knex));
+
+export const createFinnancialAccountServiceWithRepository = (finnancialAccountRepository: AbstractFinnancialAccountRepository) =>
+  new FinnancialAccountService(finnancialAccountRepository);

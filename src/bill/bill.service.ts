@@ -1,9 +1,10 @@
 import { AbstractBillRepository } from "./bill.repository.abstract";
 import { Bill } from "./bill";
-import { throwException } from "../error/throw-exception";
+import { parseException } from "../error/parse-exception";
 import { ApplicationError } from "../error/application-error";
 import { BillStatus } from "./bill-status.enum";
 import { AbstractFinnancialAccountRepository } from "../finnancial-account/finnancial-account.repository.abstract";
+import { exception } from "../error/errors";
 
 export class BillService {
 
@@ -14,13 +15,13 @@ export class BillService {
 
   async create(bill: Bill) {
     if (bill.totalValue <= 0 || bill.totalMissing < 0 || bill.totalMissing > bill.totalValue)
-      throw new ApplicationError("INVALID_OPERATION", "O valor informado para essa conta não é válido", 50);
+      throw exception("O valor informado para essa conta não é válido").invalidOperation;
 
     if (!bill.description)
-      throw new ApplicationError("INVALID_OPERATION", "É necessário informar uma descrição para essa conta", 50);
+      throw exception("É necessário informar uma descrição para essa conta").invalidOperation;
 
     if (!bill.type)
-      throw new ApplicationError("INVALID_OPERATION", "É necessário informar um tipo [Pagar = 1, Receber = 2]", 50);
+      throw exception("É necessário informar um tipo [Pagar = 1, Receber = 2]").invalidOperation;
 
     if (bill.totalMissing === 0) {
       bill.status = BillStatus.Closed;
@@ -40,12 +41,11 @@ export class BillService {
 
     try {
 
-
       if (!testing) {
         const finnancialAccount = await this.finnancialAccountRepository.findById(finnancialAccountToReturn);
 
         if (!finnancialAccountToReturn)
-          throw new ApplicationError("RECORD_NOT_FOUND", "O registro não foi encontrado", 50);
+          throw exception("O registro não foi encontrado").recordNotFound;
 
         const bill = await this.find(billId);
         const valueToReturn = bill.totalValue - bill.totalMissing;
@@ -59,18 +59,18 @@ export class BillService {
       trx.commit();
     } catch (e) {
       trx.rollback();
-      throwException(e);
+      parseException(e);
     }
   }
 
   async find(billId: number) {
     if (!billId)
-      throw new ApplicationError("INVALID_OPERATION", "É necessário informar um código válido", 50);
+      throw exception("É necessário informar um código válido").invalidOperation;
 
     const record = await this.billRepository.findById(billId);
 
     if (!record)
-      throw new ApplicationError("RECORD_NOT_FOUND", "O registro não foi encontrado", 404);
+      throw exception("O registro não foi encontrado").recordNotFound;
 
     return record;
   }
@@ -89,13 +89,13 @@ export class BillService {
     const billSnapshot = await this.find(billId);
 
     if (value <= 0)
-      throw new ApplicationError("INVALID_OPERATION", "O o valor do pagamento informado não é válido", 50);
+      throw exception("O o valor do pagamento informado não é válido").invalidOperation;
 
     if (billSnapshot.status == BillStatus.Closed)
-      throw new ApplicationError("INVALID_OPERATION", "Não é possível inserir mais pagamentos neste registro pois ele foi finalizado!", 50);
+      throw exception("Não é possível inserir mais pagamentos neste registro pois ele foi finalizado!").invalidOperation;
 
     if (value > billSnapshot.totalMissing)
-      throw new ApplicationError("INVALID_OPERATION", "Não é possível inserir pagamento com valor superior ao valor pendente", 50);
+      throw exception("Não é possível inserir pagamento com valor superior ao valor pendente").invalidOperation;
 
     billSnapshot.totalMissing -= value;
 

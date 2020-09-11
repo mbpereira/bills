@@ -1,29 +1,28 @@
-// import { AbstractFinnancialAccountRepository } from "./finnancial-account.repository.d";
 import { FinnancialAccount } from "./finnancial-account";
-import { ApplicationError } from "../error/application-error";
-import { FinnancialAccountRepository } from "./finnancial-account.repository";
+import { exception } from "../error/errors";
+import { AbstractFinnancialAccountRepository } from "./finnancial-account.repository.abstract";
 
 export class FinnancialAccountService {
   
   async find(depositId: number): Promise<FinnancialAccount> {
     if (!depositId)
-      throw new ApplicationError("INVALID_OPERATION", "É necessário informar um código de depósito válido", 50);
+      throw exception("É necessário informar um código de depósito válido").invalidOperation;
     
     const found = await this.finnancialRepository.findById(depositId);
 
     if (!found)
-      throw new ApplicationError("RECORD_NOT_FOUND", "O registro não foi encontrado", 404);
+      throw exception("O registro não foi encontrado").recordNotFound;
     
     return found;
   }
   /**
    *
    */
-  constructor(private finnancialRepository: FinnancialAccountRepository) { }
+  constructor(private finnancialRepository: AbstractFinnancialAccountRepository) { }
   
   async create(deposit: FinnancialAccount) {
     if (!deposit.name)
-      throw new ApplicationError("INVALID_OPERATION", "O nome precisa ser preenchido", 50);
+      throw exception("O nome precisa ser preenchido").invalidOperation;
     
     return this.finnancialRepository.add(deposit);
   }
@@ -50,7 +49,7 @@ export class FinnancialAccountService {
     const newBalance = accountSnapshot.balance + value;
     
     if (newBalance < 0)
-      throw new ApplicationError("INVALID_OPERATION", "Saldo insuficiente", 50);
+      throw exception("Saldo insuficiente").invalidOperation;
     
     accountSnapshot.balance = newBalance;
 

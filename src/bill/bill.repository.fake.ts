@@ -15,10 +15,7 @@ export class BillRepositoryFake extends AbstractBillRepository {
   }
   
   findById(id: number): Promise<Bill> {
-    const result = this.data.find(b => b.id === id);
-
-    if (!result)
-      throw "Not Found";
+    const result = this.data.find(b => b.id === id) as Bill;
 
     return Promise.resolve(result);
   }

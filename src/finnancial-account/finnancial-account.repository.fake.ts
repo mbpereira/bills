@@ -15,9 +15,7 @@ export class FinancialAccountRepositoryFake extends AbstractFinnancialAccountRep
   }
 
   findById(id: number): Promise<FinnancialAccount> {
-    const result = this.data.find(f => f.id === id)
-    if (!result)
-      throw "Not Found";
+    const result = this.data.find(f => f.id === id) as FinnancialAccount;
     
     return Promise.resolve(result);  
   }

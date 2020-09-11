@@ -7,8 +7,10 @@ export class ApplicationError {
   /**
    *
    */
-  constructor(name: string, message: string, code: number) {
-    this.stack = (new Error()).stack;
+  constructor(name: string, message: string, code: number, stacktrace: boolean = true) {
+    if(stacktrace)
+      this.stack = (new Error()).stack;
+    
     this.name = name;
     this.message = message;
     this.code = code;
