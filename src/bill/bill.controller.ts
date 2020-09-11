@@ -26,7 +26,7 @@ class BillController {
 
       res.send(foundRecord);
     } catch (e) {
-      parseException(e);
+      next(parseException(e));
     }
   }
 
@@ -37,7 +37,7 @@ class BillController {
 
       await this.billService.update(id, body);
     } catch (e) {
-      parseException(e);
+      next(parseException(e));
     }
   }
 
@@ -45,7 +45,7 @@ class BillController {
     try {
       await this.billService.create(req.body);
     } catch (e) {
-      parseException(e);
+      next(parseException(e));
     }
   }
 
@@ -56,7 +56,7 @@ class BillController {
 
       await this.billService.delete(idBill, idAccount);
     } catch (e) {
-      parseException(e);
+      next(parseException(e));
     }
   }
 
@@ -68,7 +68,7 @@ class BillController {
       await this.billService.pay(billId, paymentValue);
       next();
     } catch (e) {
-      next(parseException(e));
+      next(next(parseException(e)));
     }
   }
 }

@@ -34,25 +34,23 @@ export class BillService {
     await this.billRepository.add(bill);
   }
 
-  async delete(billId: number, finnancialAccountToReturn: number, testing: boolean = false) {
+  async delete(billId: number, finnancialAccountToReturn: number) {
 
     const trx = await this.billRepository.beginTransaction();
     this.finnancialAccountRepository.setTransaction(trx);
 
     try {
+      
+      const finnancialAccount = await this.finnancialAccountRepository.findById(finnancialAccountToReturn);
 
-      if (!testing) {
-        const finnancialAccount = await this.finnancialAccountRepository.findById(finnancialAccountToReturn);
+      if (!finnancialAccountToReturn)
+        throw exception("O registro não foi encontrado").recordNotFound;
 
-        if (!finnancialAccountToReturn)
-          throw exception("O registro não foi encontrado").recordNotFound;
+      const bill = await this.find(billId);
+      const valueToReturn = bill.totalValue - bill.totalMissing;
+      finnancialAccount.balance += valueToReturn;
 
-        const bill = await this.find(billId);
-        const valueToReturn = bill.totalValue - bill.totalMissing;
-        finnancialAccount.balance += valueToReturn;
-
-        await this.finnancialAccountRepository.update(finnancialAccountToReturn, finnancialAccount);
-      }
+      await this.finnancialAccountRepository.update(finnancialAccountToReturn, finnancialAccount);
 
       await this.billRepository.remove(billId);
 
