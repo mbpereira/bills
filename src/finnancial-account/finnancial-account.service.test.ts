@@ -1,4 +1,4 @@
-import { createFinnancialAccountService, createFinnancialAccountRepository, createFinnancialAccountServiceWithRepository } from "./factories";
+import { createFinnancialAccountRepository, createFinnancialAccountServiceWithRepository } from "./factories";
 import { createKnexTest } from "../data/knex";
 import { FinnancialAccount } from "./finnancial-account";
 import { truncate } from "../data/helpers";
