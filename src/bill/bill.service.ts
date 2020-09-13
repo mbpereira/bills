@@ -1,10 +1,9 @@
 import { AbstractBillRepository } from "./bill.repository.abstract";
 import { Bill } from "./bill";
 import { parseException } from "../error/parse-exception";
-import { ApplicationError } from "../error/application-error";
 import { BillStatus } from "./bill-status.enum";
 import { AbstractFinnancialAccountRepository } from "../finnancial-account/finnancial-account.repository.abstract";
-import { exception } from "../error/errors";
+import { exception } from "../error/exception";
 
 export class BillService {
 

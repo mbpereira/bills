@@ -7,7 +7,7 @@ import { FinancialAccountRepositoryFake } from "../finnancial-account/finnancial
 import { Bill } from "./bill";
 import { BillType } from "./bill-type.enum";
 import { BillStatus } from "./bill-status.enum";
-import { exception } from "../error/errors";
+import { exception } from "../error/exception";
 import { ApplicationError } from "../error/application-error";
 
 const knex = createKnexTest();

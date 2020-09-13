@@ -1,3 +1,4 @@
+import { parse } from "dotenv/types";
 import { Application, Request, Response, NextFunction, Router } from "express";
 import Knex from "knex";
 import { parseException } from "../error/parse-exception";
@@ -45,7 +46,7 @@ const accountController = (finnancialAccountService: FinnancialAccountService) =
       await finnancialAccountService.create(newFinnancialAccount);
       res.status(201).send();
     } catch (e) {
-
+      next(parseException(e));
     }
   },
 

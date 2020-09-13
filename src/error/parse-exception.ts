@@ -1,8 +1,9 @@
 import { ApplicationError } from "./application-error"
+import { exception } from "./exception";
 
 export const parseException = (error: Error): ApplicationError => {
   if (error instanceof ApplicationError)
     return error;
   
-  return new ApplicationError("INTERNAL_ERROR", error.message, 500);
+  return exception(error.message).internalError;
 };

@@ -3,7 +3,7 @@ import { createKnexTest } from "../data/knex";
 import { FinnancialAccount } from "./finnancial-account";
 import { truncate } from "../data/helpers";
 import { finnancialAccountsFakes } from "./finnancial-account.seeds";
-import { exception } from "../error/errors";
+import { exception } from "../error/exception";
 import { ApplicationError } from "../error/application-error";
 import { FinancialAccountRepositoryFake } from "./finnancial-account.repository.fake";
 

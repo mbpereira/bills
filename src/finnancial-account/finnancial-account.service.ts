@@ -1,5 +1,5 @@
 import { FinnancialAccount } from "./finnancial-account";
-import { exception } from "../error/errors";
+import { exception } from "../error/exception";
 import { AbstractFinnancialAccountRepository } from "./finnancial-account.repository.abstract";
 
 export class FinnancialAccountService {

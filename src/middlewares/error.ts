@@ -6,5 +6,5 @@ export const error = (err: any, req: Request, res: Response, next: NextFunction)
   const { stack, ...appError } = fullErr;
 
   console.error(fullErr);
-  res.send(appError);
+  res.status(fullErr.code).send(appError);
 }
