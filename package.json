@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --no-cache",
-    "start": "npx tsc && node ./dist/server.js"
+    "start": "npx tsc && node ./dist/server.js",
+    "create-tables": "npx ts-node ./src/data/initialize.ts"
   },
   "author": "",
   "license": "ISC",
