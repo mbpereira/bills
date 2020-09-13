@@ -43,7 +43,7 @@ export class FinnancialAccountService {
     await this.finnancialRepository.update(record.id, account);
   }
 
-  async movingMoney(accountId: number, value: number): Promise<void> {
+  async moveMoney(accountId: number, value: number): Promise<void> {
     const accountSnapshot = await this.find(accountId);
     
     const newBalance = accountSnapshot.balance + value;

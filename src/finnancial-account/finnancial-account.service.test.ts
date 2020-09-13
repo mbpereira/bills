@@ -94,7 +94,7 @@ describe("Serviço de contas financeiras", () => {
       const deposit = finnancialAccountsFakes[0];
       
       const expectedErrorCode = exception().invalidOperation.code;
-      await finnancialAccountServiceWithFakeRepo.movingMoney(deposit.id, -5000)
+      await finnancialAccountServiceWithFakeRepo.moveMoney(deposit.id, -5000)
         .catch((e: ApplicationError) => expect(e.code).toBe(expectedErrorCode));
       
       await finnancialAccountServiceWithFakeRepo.delete(deposit.id);
@@ -102,7 +102,7 @@ describe("Serviço de contas financeiras", () => {
 
     test("Ao tentar realizar uma movimentação que não deixe o saldo negativo então deve atualizar o valor", async () => {
       const deposit = finnancialAccountsFakes[1];
-      await finnancialAccountServiceWithFakeRepo.movingMoney(deposit.id, -20);
+      await finnancialAccountServiceWithFakeRepo.moveMoney(deposit.id, -20);
       const account = await finnancialAccountServiceWithFakeRepo.find(deposit.id);
       expect(account.balance).toBe(780);
       await finnancialAccountServiceWithFakeRepo.delete(deposit.id);
