@@ -38,47 +38,125 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.map = void 0;
 var express_1 = require("express");
-var DepositController = /** @class */ (function () {
-    /**
-     *
-     */
-    function DepositController() {
-    }
-    DepositController.prototype.load = function (req, res, next) {
-        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
-            return [2 /*return*/];
-        }); });
+var parse_exception_1 = require("../error/parse-exception");
+var factories_1 = require("./factories");
+var controller = function (finnancialAccountService) {
+    var load = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+        var finnancialAccounts, e_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    console.log(finnancialAccountService);
+                    return [4 /*yield*/, finnancialAccountService.getAll()];
+                case 1:
+                    finnancialAccounts = _a.sent();
+                    res.send(finnancialAccounts);
+                    return [3 /*break*/, 3];
+                case 2:
+                    e_1 = _a.sent();
+                    next(parse_exception_1.parseException(e_1));
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    }); };
+    var find = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+        var id, finnancialAccountFound, e_2;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    id = Number(req.params.id);
+                    return [4 /*yield*/, finnancialAccountService.find(id)];
+                case 1:
+                    finnancialAccountFound = _a.sent();
+                    res.status(200).send(finnancialAccountFound);
+                    return [3 /*break*/, 3];
+                case 2:
+                    e_2 = _a.sent();
+                    next(parse_exception_1.parseException(e_2));
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    }); };
+    var update = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+        var id, finnancialAccounUpdated, e_3;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    id = Number(req.params.id);
+                    finnancialAccounUpdated = req.body;
+                    return [4 /*yield*/, finnancialAccountService.update(id, finnancialAccounUpdated)];
+                case 1:
+                    _a.sent();
+                    res.status(200).send();
+                    return [3 /*break*/, 3];
+                case 2:
+                    e_3 = _a.sent();
+                    next(parse_exception_1.parseException(e_3));
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    }); };
+    var create = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+        var newFinnancialAccount, e_4;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    newFinnancialAccount = req.body;
+                    return [4 /*yield*/, finnancialAccountService.create(newFinnancialAccount)];
+                case 1:
+                    _a.sent();
+                    res.status(201).send();
+                    return [3 /*break*/, 3];
+                case 2:
+                    e_4 = _a.sent();
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    }); };
+    var destroy = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+        var idFinnancialAccountToDestroy, e_5;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    idFinnancialAccountToDestroy = Number(req.params.id);
+                    return [4 /*yield*/, finnancialAccountService.delete(idFinnancialAccountToDestroy)];
+                case 1:
+                    _a.sent();
+                    res.status(200).send();
+                    return [3 /*break*/, 3];
+                case 2:
+                    e_5 = _a.sent();
+                    next(parse_exception_1.parseException(e_5));
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    }); };
+    return {
+        load: load,
+        find: find,
+        create: create,
+        update: update,
+        destroy: destroy
     };
-    DepositController.prototype.find = function (req, res, next) {
-        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
-            return [2 /*return*/];
-        }); });
-    };
-    DepositController.prototype.update = function (req, res, next) {
-        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
-            return [2 /*return*/];
-        }); });
-    };
-    DepositController.prototype.create = function (req, res, next) {
-        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
-            return [2 /*return*/];
-        }); });
-    };
-    DepositController.prototype.destroy = function (req, res, next) {
-        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
-            return [2 /*return*/];
-        }); });
-    };
-    return DepositController;
-}());
+};
 exports.map = function (app, knex) {
     var route = express_1.Router();
-    var controller = new DepositController();
+    var c = controller(factories_1.createFinnancialAccountService(knex));
     route
-        .get('/', controller.load)
-        .get('/:id', controller.find)
-        .put('/:id', controller.update)
-        .post('/', controller.create)
-        .delete('/:id', controller.destroy);
-    app.use('/deposits', route);
+        .get('/', c.load)
+        .get('/:id', c.find)
+        .put('/:id', c.update)
+        .post('/', c.create)
+        .delete('/:id', c.destroy);
+    app.use('/contas-financeiras', route);
 };

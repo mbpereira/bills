@@ -1,12 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createLaunchService = exports.createLaunchRepository = void 0;
-var launch_repository_1 = require("./launch.repository");
-var launch_service_1 = require("./launch.service");
-// import { createFinnancialAccountRepository } from "../finnancial-account/factories";
-exports.createLaunchRepository = function (knex) {
-    return new launch_repository_1.BillRepository(knex);
+exports.creteBillServiceWithRepositories = exports.createBillServiceWithKnex = exports.createBillRepository = void 0;
+var bill_repository_1 = require("./bill.repository");
+var bill_service_1 = require("./bill.service");
+var factories_1 = require("../finnancial-account/factories");
+exports.createBillRepository = function (knex) {
+    return new bill_repository_1.BillRepository(knex);
 };
-exports.createLaunchService = function (knex) {
-    return new launch_service_1.LaunchService(exports.createLaunchRepository(knex));
+exports.createBillServiceWithKnex = function (knex) {
+    return new bill_service_1.BillService(exports.createBillRepository(knex), factories_1.createFinnancialAccountRepository(knex));
+};
+exports.creteBillServiceWithRepositories = function (billRepository, finnancialAccountRepository) {
+    return new bill_service_1.BillService(billRepository, finnancialAccountRepository);
 };

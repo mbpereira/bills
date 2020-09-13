@@ -1,4 +1,17 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -36,98 +49,82 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FinnancialAccountService = void 0;
-var errors_1 = require("../error/errors");
-var FinnancialAccountService = /** @class */ (function () {
+exports.BillRepository = void 0;
+var bill_repository_abstract_1 = require("./bill.repository.abstract");
+var BillRepository = /** @class */ (function (_super) {
+    __extends(BillRepository, _super);
     /**
      *
      */
-    function FinnancialAccountService(finnancialRepository) {
-        this.finnancialRepository = finnancialRepository;
+    function BillRepository(knex) {
+        var _this = _super.call(this) || this;
+        _this.knex = knex;
+        return _this;
     }
-    FinnancialAccountService.prototype.find = function (depositId) {
+    Object.defineProperty(BillRepository.prototype, "queryBuilder", {
+        get: function () {
+            if (!this.transaction)
+                return this.knex("Bills");
+            return this.transaction("Bills");
+        },
+        enumerable: false,
+        configurable: true
+    });
+    BillRepository.prototype.findById = function (id) {
         return __awaiter(this, void 0, void 0, function () {
-            var found;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        if (!depositId)
-                            throw errors_1.exception("É necessário informar um código de depósito válido").invalidOperation;
-                        return [4 /*yield*/, this.finnancialRepository.findById(depositId)];
-                    case 1:
-                        found = _a.sent();
-                        if (!found)
-                            throw errors_1.exception("O registro não foi encontrado").recordNotFound;
-                        return [2 /*return*/, found];
+                    case 0: return [4 /*yield*/, this.queryBuilder.where("id", id)
+                            .first()];
+                    case 1: return [2 /*return*/, _a.sent()];
                 }
             });
         });
     };
-    FinnancialAccountService.prototype.create = function (deposit) {
+    BillRepository.prototype.all = function (limit) {
         return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                if (!deposit.name)
-                    throw errors_1.exception("O nome precisa ser preenchido").invalidOperation;
-                return [2 /*return*/, this.finnancialRepository.add(deposit)];
-            });
-        });
-    };
-    FinnancialAccountService.prototype.getAll = function (page) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                return [2 /*return*/, this.finnancialRepository.all()];
-            });
-        });
-    };
-    FinnancialAccountService.prototype.delete = function (depositId) {
-        return __awaiter(this, void 0, void 0, function () {
-            var record;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.find(depositId)];
-                    case 1:
-                        record = _a.sent();
-                        return [2 /*return*/, this.finnancialRepository.remove(record.id)];
+                    case 0: return [4 /*yield*/, this.queryBuilder.select()];
+                    case 1: return [2 /*return*/, _a.sent()];
                 }
             });
         });
     };
-    FinnancialAccountService.prototype.update = function (accountId, account) {
+    BillRepository.prototype.add = function (bill) {
         return __awaiter(this, void 0, void 0, function () {
-            var record;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.find(accountId)];
+                    case 0: return [4 /*yield*/, this.queryBuilder.insert(bill)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    BillRepository.prototype.remove = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.queryBuilder.where("id", id)
+                            .first()
+                            .del()];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    BillRepository.prototype.update = function (id, launch) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.queryBuilder.where("id", id).update(launch)];
                     case 1:
-                        record = _a.sent();
-                        return [4 /*yield*/, this.finnancialRepository.update(record.id, account)];
-                    case 2:
                         _a.sent();
                         return [2 /*return*/];
                 }
             });
         });
     };
-    FinnancialAccountService.prototype.movingMoney = function (accountId, value) {
-        return __awaiter(this, void 0, void 0, function () {
-            var accountSnapshot, newBalance;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.find(accountId)];
-                    case 1:
-                        accountSnapshot = _a.sent();
-                        newBalance = accountSnapshot.balance + value;
-                        if (newBalance < 0)
-                            throw errors_1.exception("Saldo insuficiente").invalidOperation;
-                        accountSnapshot.balance = newBalance;
-                        return [4 /*yield*/, this.finnancialRepository.update(accountId, Object.assign({}, accountSnapshot))];
-                    case 2:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    return FinnancialAccountService;
-}());
-exports.FinnancialAccountService = FinnancialAccountService;
+    return BillRepository;
+}(bill_repository_abstract_1.AbstractBillRepository));
+exports.BillRepository = BillRepository;

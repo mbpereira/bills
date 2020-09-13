@@ -63,6 +63,10 @@ var AbstractTransactional = /** @class */ (function () {
     };
     Object.defineProperty(AbstractTransactional.prototype, "transaction", {
         get: function () {
+            var _a;
+            if ((_a = this._transaction) === null || _a === void 0 ? void 0 : _a.isCompleted) {
+                return null;
+            }
             return this._transaction;
         },
         enumerable: false,

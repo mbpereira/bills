@@ -5,70 +5,68 @@ import { createFinnancialAccountService } from "./factories";
 import { FinnancialAccount } from "./finnancial-account";
 import { FinnancialAccountService } from "./finnancial-account.service";
 
-class FinnancialAccountController {
-  /**
-   *
-   */
-  constructor(private finnancialAccountService: FinnancialAccountService) { }
 
-  async load(req: Request, res: Response, next: NextFunction) {
+const accountController = (finnancialAccountService: FinnancialAccountService) => ({
+
+  getAll: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const finnancialAccounts = await this.finnancialAccountService.getAll();
+      console.log(finnancialAccountService);
+      const finnancialAccounts = await finnancialAccountService.getAll();
       res.send(finnancialAccounts);
     } catch (e) {
       next(parseException(e));
     }
-  }
+  },
 
-  async find(req: Request, res: Response, next: NextFunction) {
+  findById: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = Number(req.params.id);
-      const finnancialAccountFound = await this.finnancialAccountService.find(id);
+      const finnancialAccountFound = await finnancialAccountService.find(id);
       res.status(200).send(finnancialAccountFound);
     } catch (e) {
       next(parseException(e));
     }
-  }
+  },
 
-  async update(req: Request, res: Response, next: NextFunction) { 
+  update: async (req: Request, res: Response, next: NextFunction) => { 
     try {
       const id = Number(req.params.id);
       const finnancialAccounUpdated = req.body as FinnancialAccount;
-      await this.finnancialAccountService.update(id, finnancialAccounUpdated);
+      await finnancialAccountService.update(id, finnancialAccounUpdated);
       res.status(200).send();
     } catch (e) {
       next(parseException(e));
     }
-  }
+  },
 
-  async create(req: Request, res: Response, next: NextFunction) { 
+  create: async (req: Request, res: Response, next: NextFunction) => { 
     try {
       const newFinnancialAccount = req.body as FinnancialAccount;
-      await this.finnancialAccountService.create(newFinnancialAccount);
+      await finnancialAccountService.create(newFinnancialAccount);
       res.status(201).send();
     } catch (e) {
 
     }
-  }
+  },
 
-  async destroy(req: Request, res: Response, next: NextFunction) { 
+  destroy: async (req: Request, res: Response, next: NextFunction) => { 
     try {
       const idFinnancialAccountToDestroy = Number(req.params.id);
-      await this.finnancialAccountService.delete(idFinnancialAccountToDestroy);
+      await finnancialAccountService.delete(idFinnancialAccountToDestroy);
       res.status(200).send();
     } catch (e) {
       next(parseException(e));
     }
   }
-}
+})
 
 export const map = (app: Application, knex: Knex) => {
   const route = Router();
-  const controller = new FinnancialAccountController(createFinnancialAccountService(knex));
+  const controller = accountController(createFinnancialAccountService(knex));
 
   route
-    .get('/', controller.load)
-    .get('/:id', controller.find)
+    .get('/', controller.getAll)
+    .get('/:id', controller.findById)
     .put('/:id', controller.update)
     .post('/', controller.create)
     .delete('/:id', controller.destroy)

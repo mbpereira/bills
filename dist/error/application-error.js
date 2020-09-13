@@ -5,8 +5,10 @@ var ApplicationError = /** @class */ (function () {
     /**
      *
      */
-    function ApplicationError(name, message, code) {
-        this.stack = (new Error()).stack;
+    function ApplicationError(name, message, code, stacktrace) {
+        if (stacktrace === void 0) { stacktrace = true; }
+        if (stacktrace)
+            this.stack = (new Error()).stack;
         this.name = name;
         this.message = message;
         this.code = code;

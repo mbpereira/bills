@@ -50,7 +50,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FinnancialAccountRepository = void 0;
-var finnancial_account_repository_d_1 = require("./finnancial-account.repository.d");
+var finnancial_account_repository_abstract_1 = require("./finnancial-account.repository.abstract");
 var FinnancialAccountRepository = /** @class */ (function (_super) {
     __extends(FinnancialAccountRepository, _super);
     function FinnancialAccountRepository(knex) {
@@ -60,10 +60,9 @@ var FinnancialAccountRepository = /** @class */ (function (_super) {
     }
     Object.defineProperty(FinnancialAccountRepository.prototype, "queryBuilder", {
         get: function () {
-            return this.knex("FinnancialAccounts");
-            // if(!this.transaction)
-            //   return this.knex("FinnancialAccounts");
-            // return this.transaction("FinnancialAccounts");
+            if (!this.transaction)
+                return this.knex("FinnancialAccounts");
+            return this.transaction("FinnancialAccounts");
         },
         enumerable: false,
         configurable: true
@@ -126,5 +125,5 @@ var FinnancialAccountRepository = /** @class */ (function (_super) {
         });
     };
     return FinnancialAccountRepository;
-}(finnancial_account_repository_d_1.AbstractFinnancialAccountRepository));
+}(finnancial_account_repository_abstract_1.AbstractFinnancialAccountRepository));
 exports.FinnancialAccountRepository = FinnancialAccountRepository;

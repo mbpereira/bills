@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.depositFakes = void 0;
-exports.depositFakes = [
+exports.finnancialAccountsFakes = void 0;
+exports.finnancialAccountsFakes = [
     { id: 1, name: "BRADESCO", balance: 800 },
     { id: 2, name: "NEXT", balance: 800 },
     { id: 3, name: "NUBANK ", balance: 0 },

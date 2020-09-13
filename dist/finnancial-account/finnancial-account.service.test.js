@@ -40,13 +40,15 @@ var factories_1 = require("./factories");
 var knex_1 = require("../data/knex");
 var helpers_1 = require("../data/helpers");
 var finnancial_account_seeds_1 = require("./finnancial-account.seeds");
+var errors_1 = require("../error/errors");
+var finnancial_account_repository_fake_1 = require("./finnancial-account.repository.fake");
 var knex = knex_1.createKnexTest();
-var finnancialAccountService = factories_1.createFinnancialAccountService(knex);
-describe("Teste de integração - Cadastro de Contas Financeiras", function () {
+var finnancialAccountRepository = factories_1.createFinnancialAccountRepository(knex);
+describe("Integração - Cadastro de Contas Financeiras", function () {
     beforeAll(function () { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, helpers_1.truncate(knex, ["Launches", "FinnancialAccounts"])];
+                case 0: return [4 /*yield*/, helpers_1.truncate(knex, ["Bills", "FinnancialAccounts"])];
                 case 1:
                     _a.sent();
                     return [2 /*return*/];
@@ -54,34 +56,21 @@ describe("Teste de integração - Cadastro de Contas Financeiras", function () {
         });
     }); });
     describe("Criação de registros", function () {
-        test("Deve lançar uma exceção caso o nome não seja preenchido", function () { return __awaiter(void 0, void 0, void 0, function () {
-            var deposit;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        deposit = { id: 1, name: "" };
-                        return [4 /*yield*/, expect(finnancialAccountService.create(deposit)).rejects.toMatchObject({ code: 50, name: "INVALID_OPERATION" })];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        }); });
         test("Deve cadastrar o registro corretamente", function () { return __awaiter(void 0, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, Promise.all(finnancial_account_seeds_1.depositFakes.map(function (deposit) { return finnancialAccountService.create(deposit); }))];
+                    case 0: return [4 /*yield*/, Promise.all(finnancial_account_seeds_1.finnancialAccountsFakes.map(function (deposit) { return finnancialAccountRepository.add(deposit); }))];
                     case 1:
                         _a.sent();
-                        return [4 /*yield*/, Promise.all(finnancial_account_seeds_1.depositFakes.map(function (deposit) { return __awaiter(void 0, void 0, void 0, function () {
+                        return [4 /*yield*/, Promise.all(finnancial_account_seeds_1.finnancialAccountsFakes.map(function (deposit) { return __awaiter(void 0, void 0, void 0, function () {
                                 var depoistFound;
                                 return __generator(this, function (_a) {
                                     switch (_a.label) {
-                                        case 0: return [4 /*yield*/, finnancialAccountService.find(deposit.id)];
+                                        case 0: return [4 /*yield*/, finnancialAccountRepository.findById(deposit.id)];
                                         case 1:
                                             depoistFound = _a.sent();
                                             expect(depoistFound).toBeDefined();
-                                            return [4 /*yield*/, finnancialAccountService.delete(depoistFound.id)];
+                                            return [4 /*yield*/, finnancialAccountRepository.remove(depoistFound.id)];
                                         case 2:
                                             _a.sent();
                                             return [2 /*return*/];
@@ -95,25 +84,15 @@ describe("Teste de integração - Cadastro de Contas Financeiras", function () {
             });
         }); });
     });
-    describe("Remoção de registros", function () {
-        test("Deve lançar uma exceção se não for informado um código", function () { return __awaiter(void 0, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, expect(finnancialAccountService.delete(0)).rejects.toMatchObject({ code: 50, name: "INVALID_OPERATION" })];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        }); });
-    });
     describe("Consulta de registros", function () {
         test("Deve consultar os registros sem lançar exceção", function () { return __awaiter(void 0, void 0, void 0, function () {
+            var foundRecords;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, expect(finnancialAccountService.getAll()).resolves.toMatchObject([])];
+                    case 0: return [4 /*yield*/, finnancialAccountRepository.all()];
                     case 1:
-                        _a.sent();
+                        foundRecords = _a.sent();
+                        expect(foundRecords).toEqual([]);
                         return [2 /*return*/];
                 }
             });
@@ -123,26 +102,16 @@ describe("Teste de integração - Cadastro de Contas Financeiras", function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        deposit = finnancial_account_seeds_1.depositFakes[0];
-                        return [4 /*yield*/, finnancialAccountService.create(deposit)];
+                        deposit = finnancial_account_seeds_1.finnancialAccountsFakes[0];
+                        return [4 /*yield*/, finnancialAccountRepository.add(deposit)];
                     case 1:
                         _a.sent();
-                        return [4 /*yield*/, finnancialAccountService.find(deposit.id)];
+                        return [4 /*yield*/, finnancialAccountRepository.findById(deposit.id)];
                     case 2:
                         found = _a.sent();
                         expect(found.id).toBe(deposit.id);
-                        return [4 /*yield*/, finnancialAccountService.delete(deposit.id)];
+                        return [4 /*yield*/, finnancialAccountRepository.remove(deposit.id)];
                     case 3:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        }); });
-        test("Ao consultar um registro que não existe deve lançar uma exceção", function () { return __awaiter(void 0, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, expect(finnancialAccountService.find(-1)).rejects.toMatchObject({ code: 404, name: "RECORD_NOT_FOUND" })];
-                    case 1:
                         _a.sent();
                         return [2 /*return*/];
                 }
@@ -150,54 +119,96 @@ describe("Teste de integração - Cadastro de Contas Financeiras", function () {
         }); });
     });
     describe("Atualização de registros", function () {
-        test("Ao tentar atualizar um registro inexistente deve lançar uma exeção", function () { return __awaiter(void 0, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, expect(finnancialAccountService.update(-1, { id: -1, name: "Banco do Mateus", balance: 200 })).rejects.toMatchObject({ code: 404, name: "RECORD_NOT_FOUND" })];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        }); });
         test("Ao tentar atualizar um registro existente então este deve ser atualizado corretamente", function () { return __awaiter(void 0, void 0, void 0, function () {
             var deposit, found;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        deposit = finnancial_account_seeds_1.depositFakes[0];
-                        return [4 /*yield*/, finnancialAccountService.create(deposit)];
+                        deposit = finnancial_account_seeds_1.finnancialAccountsFakes[0];
+                        return [4 /*yield*/, finnancialAccountRepository.add(deposit)];
                     case 1:
                         _a.sent();
                         deposit.name = deposit.name + " - Atualizado";
-                        return [4 /*yield*/, finnancialAccountService.update(deposit.id, deposit)];
+                        return [4 /*yield*/, finnancialAccountRepository.update(deposit.id, deposit)];
                     case 2:
                         _a.sent();
-                        return [4 /*yield*/, finnancialAccountService.find(deposit.id)];
+                        return [4 /*yield*/, finnancialAccountRepository.findById(deposit.id)];
                     case 3:
                         found = _a.sent();
                         expect(found.name).toBe(deposit.name);
-                        return [4 /*yield*/, finnancialAccountService.delete(deposit.id)];
+                        return [4 /*yield*/, finnancialAccountRepository.remove(deposit.id)];
                     case 4:
                         _a.sent();
                         return [2 /*return*/];
                 }
             });
         }); });
-        test("Ao tentar realizar uma movimentação que deixa o saldo negativo deve lançar uma exceção", function () { return __awaiter(void 0, void 0, void 0, function () {
-            var deposit;
+    });
+});
+var finnancialAccountRepositoryFake = new finnancial_account_repository_fake_1.FinancialAccountRepositoryFake();
+var finnancialAccountServiceWithFakeRepo = factories_1.createFinnancialAccountServiceWithRepository(finnancialAccountRepositoryFake);
+describe("Serviço de contas financeiras", function () {
+    describe("Criação de contas financeiras", function () {
+        test("Deve lançar uma exceção caso o nome não seja preenchido", function () { return __awaiter(void 0, void 0, void 0, function () {
+            var deposit, expectedErrorCode;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        deposit = finnancial_account_seeds_1.depositFakes[0];
-                        return [4 /*yield*/, finnancialAccountService.create(deposit)];
+                        deposit = { id: 1, name: "" };
+                        expectedErrorCode = errors_1.exception().invalidOperation.code;
+                        return [4 /*yield*/, finnancialAccountServiceWithFakeRepo.create(deposit)
+                                .catch(function (e) { return expect(e.code).toBe(expectedErrorCode); })];
                     case 1:
                         _a.sent();
-                        return [4 /*yield*/, expect(finnancialAccountService.movingMoney(deposit.id, -5000)).rejects.toMatchObject({ code: 50 })];
-                    case 2:
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+    });
+    describe("Consulta de contas financeiras", function () {
+        test("Ao consultar um registro que não existe deve lançar uma exceção", function () { return __awaiter(void 0, void 0, void 0, function () {
+            var expectedErrorCode;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        expectedErrorCode = errors_1.exception().recordNotFound.code;
+                        return [4 /*yield*/, finnancialAccountServiceWithFakeRepo.find(-1)
+                                .catch(function (e) { return expect(e.code).toBe(expectedErrorCode); })];
+                    case 1:
                         _a.sent();
-                        return [4 /*yield*/, finnancialAccountService.delete(deposit.id)];
-                    case 3:
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+    });
+    describe("Atualização de contas financeiras", function () {
+        test("Ao tentar atualizar um registro inexistente deve lançar uma exeção", function () { return __awaiter(void 0, void 0, void 0, function () {
+            var expectedErrorCode;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        expectedErrorCode = errors_1.exception().recordNotFound.code;
+                        return [4 /*yield*/, finnancialAccountServiceWithFakeRepo.update(-1, { id: -1, name: "Banco do Mateus", balance: 200 })
+                                .catch(function (e) { return expect(e.code).toBe(expectedErrorCode); })];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+        test("Ao tentar realizar uma movimentação que deixa o saldo negativo deve lançar uma exceção", function () { return __awaiter(void 0, void 0, void 0, function () {
+            var deposit, expectedErrorCode;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        deposit = finnancial_account_seeds_1.finnancialAccountsFakes[0];
+                        expectedErrorCode = errors_1.exception().invalidOperation.code;
+                        return [4 /*yield*/, finnancialAccountServiceWithFakeRepo.movingMoney(deposit.id, -5000)
+                                .catch(function (e) { return expect(e.code).toBe(expectedErrorCode); })];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, finnancialAccountServiceWithFakeRepo.delete(deposit.id)];
+                    case 2:
                         _a.sent();
                         return [2 /*return*/];
                 }
@@ -208,19 +219,32 @@ describe("Teste de integração - Cadastro de Contas Financeiras", function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        deposit = finnancial_account_seeds_1.depositFakes[0];
-                        return [4 /*yield*/, finnancialAccountService.create(deposit)];
+                        deposit = finnancial_account_seeds_1.finnancialAccountsFakes[1];
+                        return [4 /*yield*/, finnancialAccountServiceWithFakeRepo.movingMoney(deposit.id, -20)];
                     case 1:
                         _a.sent();
-                        return [4 /*yield*/, finnancialAccountService.movingMoney(deposit.id, -20)];
+                        return [4 /*yield*/, finnancialAccountServiceWithFakeRepo.find(deposit.id)];
                     case 2:
-                        _a.sent();
-                        return [4 /*yield*/, finnancialAccountService.find(deposit.id)];
-                    case 3:
                         account = _a.sent();
                         expect(account.balance).toBe(780);
-                        return [4 /*yield*/, finnancialAccountService.delete(deposit.id)];
-                    case 4:
+                        return [4 /*yield*/, finnancialAccountServiceWithFakeRepo.delete(deposit.id)];
+                    case 3:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+    });
+    describe("Remoção de registros", function () {
+        test("Deve lançar uma exceção se não for informado um código", function () { return __awaiter(void 0, void 0, void 0, function () {
+            var expectedErrorCode;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        expectedErrorCode = errors_1.exception().invalidOperation.code;
+                        return [4 /*yield*/, finnancialAccountServiceWithFakeRepo.delete(0)
+                                .catch(function (e) { return expect(e.code).toBe(expectedErrorCode); })];
+                    case 1:
                         _a.sent();
                         return [2 /*return*/];
                 }

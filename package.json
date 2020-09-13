@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --no-cache"
+    "test": "jest --no-cache",
+    "start": "npx tsc && node ./dist/server.js"
   },
   "author": "",
   "license": "ISC",
